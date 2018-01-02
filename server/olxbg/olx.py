@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import multiprocessing
 import requests
+from multiprocessing import Pool
 import time
 from bs4 import BeautifulSoup
 
@@ -25,26 +25,19 @@ class OlxScraper(object):
         self.url = ''
         self.query = ''
 
-    def set_query(self, query):
-        self.query = query
-        self.url = 'https://www.olx.bg/ads/q-' + query + '/?search%5Bdescription%5D=1'
-
-    @property
-    def scrap(self):
+    @classmethod
+    def scrap(self, query):
         result = []
         page = ''
-        while page == '':
+        while '' == page:
             try:
-                page = requests.get(self.url)
+                page = requests.get('https://www.olx.bg/ads/q-' + query + '/?search%5Bdescription%5D=1')
             except:
                 print("Connection refused by the server..")
-                print("Let me sleep for 5 seconds")
-                print("ZZzzzz...")
-                time.sleep(5)
-                print("Was a nice sleep, now let me continue...")
+                time.sleep(4)
                 continue
 
-        soup = BeautifulSoup(page.content, 'html.parser')
+        soup = BeautifulSoup( page.content, 'html.parser')
 
         array = soup.find_all('td', {'class': 'offer'})
         for html in array:
@@ -99,18 +92,27 @@ class OlxScraper(object):
 
         return result
 
+    @classmethod
+    def multiscrap(self, queries):
+        p = Pool(len(queries))
+        result = p.map(self.scrap, queries)
+        p.terminate()
+        p.join()
+        return result
 
 def main():
-    scrapper = OlxScraper()
-    scrapper.set_query('recaro')
-    adds = scrapper.scrap
+    #scrapper = OlxScraper()
+    #adds = scrapper.scrap('recaro')
+    #adds = scrapper.multiscrap()
     print('')
     print('***************************************************')
-    for add in adds:
-        add_data = vars(add)
-        for single_data in add_data.items():
-            print('%s: %s' % single_data)
-        print('***************************************************')
+    #for add in adds:
+        #for a in add:
+        #add_data = vars(add)
+        #for single_data in add_data.items():
+        #    print('%s: %s' % single_data)
+        #print('***************************************************')
+        #print(a.headline)
 
 
 # test purpose
