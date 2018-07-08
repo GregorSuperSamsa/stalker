@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 import json
 from olxbg import olx
+import pprint
 
 
 app = Flask(__name__)
@@ -47,8 +48,8 @@ def _olx():
     for adds in addss:
         for add in adds:
             jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
-    return jason
 
+    return jason
 
 
 if __name__ == '__main__':

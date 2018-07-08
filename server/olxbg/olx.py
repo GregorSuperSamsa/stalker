@@ -37,7 +37,7 @@ class OlxScraper(object):
                 time.sleep(4)
                 continue
 
-        soup = BeautifulSoup( page.content, 'html.parser')
+        soup = BeautifulSoup(page.content, 'html.parser')
 
         array = soup.find_all('td', {'class': 'offer'})
         for html in array:
@@ -100,21 +100,20 @@ class OlxScraper(object):
         p.join()
         return result
 
-def main():
-    #scrapper = OlxScraper()
-    #adds = scrapper.scrap('recaro')
-    #adds = scrapper.multiscrap()
-    print('')
-    print('***************************************************')
-    #for add in adds:
-        #for a in add:
-        #add_data = vars(add)
-        #for single_data in add_data.items():
-        #    print('%s: %s' % single_data)
-        #print('***************************************************')
-        #print(a.headline)
-
-
-# test purpose
-if __name__ == "__main__":
-    main()
+# def main():
+#     scrapper = OlxScraper()
+#     adds = scrapper.scrap('recaro')
+#     print('')
+#     print('***************************************************')
+#     for add in adds:
+#         for a in add:
+#             add_data = vars(add)
+#             for single_data in add_data.items():
+#                 print('%s: %s' % single_data)
+#             print('***************************************************')
+#             print(a.headline)
+#
+#
+# # test purpose
+# if __name__ == "__main__":
+#     main()
