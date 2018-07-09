@@ -2,3 +2,5 @@
 \.idea/
 server/venv/
 server/olxbg/__pycache__/
+
+server/bazarbg/__pycache__/
