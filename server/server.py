@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 import json
 from olxbg import olx
+from bazarbg import bazar
 import pprint
 
 
@@ -43,6 +44,20 @@ def _olx():
     queries = request.args.getlist('query')
     print(queries)
     scrapper = olx.OlxScraper()
+    addss = scrapper.multiscrap(queries)
+    jason = ''
+    for adds in addss:
+        for add in adds:
+            jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
+
+    return jason
+
+
+@app.route('/bazar')
+def _bazar():
+    queries = request.args.getlist('query')
+    print(queries)
+    scrapper = bazar.BazarScraper()
     addss = scrapper.multiscrap(queries)
     jason = ''
     for adds in addss:
