@@ -1,25 +1,94 @@
 # -*- coding: utf-8 -*-
 
+import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
-import requests
-from multiprocessing import Pool
-import time
 from bs4 import BeautifulSoup
+from bs4 import SoupStrainer
 
 
-# class CarsAdd(object):
-#     def __init__(self):
-#         self.headline = ''
-#         self.text = ''
-#         self.price = ''
-#         self.location = ''
-#         self.date = ''
-#         self.user = ''
-#         self.phone = ''
-#         self.url = ''
-#         self.thumbnail = ''
-#         self.images = []
+class CarsAdd(object):
+    def __init__(self):
+        self.headline = ''
+        self.text = ''
+        self.price = ''
+        self.location = ''
+        self.date = ''
+        self.user = ''
+        self.phone = ''
+        self.url = ''
+        self.thumbnail = ''
+        self.images = []
+#
+#
+def main():
+    # cache
+    # no images
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('headless')
+    prefs = {"profile.managed_default_content_settings.images": 2, 'disk-cache-size': 4096}
+    chrome_options.add_experimental_option('prefs', prefs)
+
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+
+    driver.implicitly_wait(300)
+    driver.get('https://www.cars.bg/?go=home')
+
+    driver.find_element_by_link_text('Разширено търсене').click()
+
+    value = 'Мотори'
+    select_element = Select(driver.find_element_by_name('section'))
+    select_element.select_by_visible_text(value)
+
+    value = 'Avo'
+    select_element = Select(driver.find_element_by_name('brand_motoId'))
+    select_element.select_by_visible_text(value)
+
+    driver.find_element_by_name('yearFrom').send_keys('1900')
+    driver.find_element_by_name('yearTo').send_keys('2000')
+
+    driver.find_element_by_name('offersFor3').click()
+
+    driver.find_element_by_link_text('Търсене').click()
+
+    driver.execute_script('ConsentAnswear("no")')
+    time.sleep(3)
+
+    html = driver.page_source
+
+    strainer = SoupStrainer('table', {'class': 'tableListResults'})
+
+    soup = BeautifulSoup(html, 'html.parser', parse_only=strainer)
+
+    adds = soup.find_all('tr', {'class': ['odd ', 'even ', 'odd last', 'even last']})
+    for add in adds:
+        obj = CarsAdd()
+        #
+        headline = add.find('span', {'class': 'ver15black'})
+        if headline:
+            obj.headline = headline.text.strip()
+        else:
+            obj.headline = 'error'
+        #
+        url = add.find('a')
+        if url:
+            obj.url = url['href']
+            print(url)
+        else:
+            obj.url = 'error'
+
+        print(obj.headline)
+        print(obj.url)
+        print('')
+
+
+    driver.quit()
+
+# test purpose
+if __name__ == "__main__":
+    main()
+
+
 #
 #
 # # https://www.cars.bg/?
@@ -131,66 +200,9 @@ from bs4 import BeautifulSoup
 #         p.terminate()
 #         p.join()
 #         return result
-#
-#
-def main():
-    # cache
-    # no images
-    chrome_options = webdriver.ChromeOptions()
-    prefs = {"profile.managed_default_content_settings.images": 2, 'disk-cache-size': 4096}
-    chrome_options.add_experimental_option('prefs', prefs)
-    driver = webdriver.Chrome(chrome_options=chrome_options)
-
-    driver.implicitly_wait(300)
-    driver.get('https://www.cars.bg/?go=home')
-
-    driver.find_element_by_link_text('Разширено търсене').click()
-
-    value = 'Мотори'
-    select_element = Select(driver.find_element_by_name('section'))
-    select_element.select_by_visible_text(value)
-
-    value = 'Avo'
-    select_element = Select(driver.find_element_by_name('brand_motoId'))
-    select_element.select_by_visible_text(value)
-
-    driver.find_element_by_name('yearFrom').send_keys('1900')
-    driver.find_element_by_name('yearTo').send_keys('1979')
-
-    driver.find_element_by_name('offersFor3').click()
-
-    driver.find_element_by_link_text('Търсене').click()
-
-
-    driver.execute_script('ConsentAnswear("no")')
 
 
 
 
-    # for option in select_element.ect_element.options:
-    #      if option.get_attribute('value') == value:
-    #          select_element.select_by_visible_text(option.text)
 
 
-
-    time.sleep(60)
-
-    driver.quit()
-
-    # scrapper = BazarScraper()
-    # adds = scrapper.scrap('awo')
-    # print('')
-    # print('***************************************************')
-    # for add in adds:
-    #     add_data = vars(add)
-    #     for single_data in add_data.items():
-    #         print('%s: %s' % single_data)
-    #         print('***************************************************')
-    #         print(add.headline)
-
-
-#
-#
-# # test purpose
-if __name__ == "__main__":
-    main()
