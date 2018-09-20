@@ -57,20 +57,18 @@ def main():
     driver.implicitly_wait(300)
     driver.get('https://www.imot.bg/')
 
+    # Sales
     driver.find_element_by_link_text('Продажби').click()
 
     # Area
     select_element = Select(driver.find_element_by_name('f38'))
     select_element.select_by_value('област Варна')
 
-    #Къща
+    # House
     driver.find_element_by_id('vi10').click()
 
-    # Къща
-    driver.find_element_by_id('vi10').click()
-
-    #Specific areas
-    #selo Kichevo
+    # Specific areas
+    # - Kichevo
     select_element = Select(driver.find_element_by_name('ri'))
     select_element.select_by_value('с. Кичево')
     driver.execute_script('javascript:toright()')
@@ -78,27 +76,10 @@ def main():
     select_element = Select(driver.find_element_by_name('f41'))
     select_element.select_by_value('2')
 
-    driver.find_element_by_
+    # press search button
+    driver.find_element_by_css_selector('input[type="button"]').click()
 
-    value = 'Avo'
-    select_element = Select(driver.find_element_by_name('brand_motoId'))
-    select_element.select_by_visible_text(value)
-
-    driver.find_element_by_name('yearFrom').send_keys('1900')
-    driver.find_element_by_name('yearTo').send_keys('2000')
-
-
-
-    #for parts
-    driver.find_element_by_name('offersFor3').click()
-    #broken/hit
-    driver.find_element_by_name('offersFor2').click()
-
-
-
-    driver.find_element_by_link_text('Търсене').click()
-
-    driver.execute_script('ConsentAnswear("no")')
+    # Wait for rendering
     time.sleep(3)
 
     html = driver.page_source
@@ -129,6 +110,7 @@ def main():
         print('')
 
 
+    # Close driver
     driver.quit()
 
 
