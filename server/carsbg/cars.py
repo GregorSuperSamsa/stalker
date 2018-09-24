@@ -5,13 +5,55 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
-from enum import Enum
+from collections import  namedtuple
 
 
-class CarsScrapper(object):
+Search = namedtuple('Search', 'section, brand')
+Search = Search('cars', ['lada', 'bmw'])
+
+
+
+# class Search:
+#     class Cars:
+#         section = "cars"
+#         class Brand:
+#             lada = "lada"
+#     class Motorcycles:
+#         class Brand:
+#             awo = "avo"
+
+    # class Buses:
+    #     buses       = "busove"
+    # motorcycles = "moto"
+    # campers     = "caravan"
+    # trucks      = "truck"
+    # boats       = "boat"
+    # bagers      = "bager"
+    # agro        = "agro"
+    # trailer     = "trailer"
+    # parts       = "part"
+    # tires       = "tire"
+
+#class Brand:
+#    lada = "lada"
+        # buses = "busove"
+        # motorcycles = "moto"
+        # caravan = "caravan"
+        # trucks = "truck"
+        # boats = "boat"
+        # bagers = "bager"
+        # agro = "agro"
+        # trailer = "trailer"
+        # parts = "part"
+        # tires = "tire"
+
+
+class CarsScrapper(Search):
+    #Section = Enum('Section', 'cars busove moto caravan truck boat bager agro trailer part tire')
+
+
     def __init__(self):
-        self.Section = Enum('Section', 'cars busove moto caravan truck boat bager agro trailer part tire')
-        self.section = self.Section.cars.name
+        #self.section = self.Section.cars.name
         self.brand = ""
         self.model = ""
         self.year_from = ""
@@ -21,6 +63,14 @@ class CarsScrapper(object):
     def setup(self):
         pass
         #print(self.section)
+
+    def setSection(self, section):
+        self.section = section
+        print(self.section)
+
+    def setBrand(self, brand):
+        self.brand = brand
+        print(self.brand)
 
 
 
@@ -41,7 +91,12 @@ class CarsAdd(object):
 #
 #
 def main():
+
+
     scrapper = CarsScrapper()
+
+    scrapper.setSection(Search.Cars.Brand.lada)
+    scrapper.setBrand(Brand.lada)
     scrapper.setup()
 
     #cached
