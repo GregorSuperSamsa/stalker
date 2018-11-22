@@ -14,8 +14,7 @@ app = Flask(__name__)
 # def scrap():
 #     scrapper = olx.OlxScraper()
 #     query = 'ретро'
-#     scrapper.set_query(query)
-#     adds = scrapper.scrap
+#     adds = scrapper.scrap(query)
 #
 #     jason = ''
 #     html = ''
@@ -36,7 +35,7 @@ app = Flask(__name__)
 #         jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
 #     html += 'json:<br><br>'
 #     html += jason
-    #return html
+#     return html
 
 
 @app.route('/olx')
@@ -51,20 +50,20 @@ def _olx():
             jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
 
     return jason
-
-
-@app.route('/bazar')
-def _bazar():
-    queries = request.args.getlist('query')
-    print(queries)
-    scrapper = bazar.BazarScraper()
-    addss = scrapper.multiscrap(queries)
-    jason = ''
-    for adds in addss:
-        for add in adds:
-            jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
-
-    return jason
+#
+#
+# @app.route('/bazar')
+# def _bazar():
+#     queries = request.args.getlist('query')
+#     print(queries)
+#     scrapper = bazar.BazarScraper()
+#     addss = scrapper.multiscrap(queries)
+#     jason = ''
+#     for adds in addss:
+#         for add in adds:
+#             jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
+#
+#     return jason
 
 
 if __name__ == '__main__':

@@ -68,11 +68,11 @@ class OlxScraper(object):
 
 
                     # location
-                    tag_location = html.find('p', {'class': 'color-9 lheight16 marginbott5'}).find('span')
-                    if tag_location:
-                        add.location = tag_location.text.strip()
-                    else:
-                        add.location = 'error'
+                    # tag_location = html.find('p', {'class': 'color-9 lheight16 marginbott5'}).find('span')
+                    # if tag_location:
+                    #     add.location = tag_location.text.strip()
+                    # else:
+                    #     add.location = 'error'
 
                     # date
                     tag_date = html.find('p', {'class': 'color-9 lheight16 marginbott5 x-normal'})
@@ -94,26 +94,29 @@ class OlxScraper(object):
 
     @classmethod
     def multiscrap(self, queries):
-        p = Pool(len(queries))
-        result = p.map(self.scrap, queries)
-        p.terminate()
-        p.join()
+        if len(queries):
+            p = Pool(len(queries))
+            result = p.map(self.scrap, queries)
+            p.terminate()
+            p.join()
+        else:
+            result = []
         return result
 
-# def main():
-#     scrapper = OlxScraper()
-#     adds = scrapper.scrap('recaro')
-#     print('')
-#     print('***************************************************')
-#     for add in adds:
-#         for a in add:
-#             add_data = vars(add)
-#             for single_data in add_data.items():
-#                 print('%s: %s' % single_data)
-#             print('***************************************************')
-#             print(a.headline)
-#
-#
-# # test purpose
-# if __name__ == "__main__":
-#     main()
+def main():
+    scrapper = OlxScraper()
+    adds = scrapper.scrap('recaro')
+    print('')
+    print('***************************************************')
+    for add in adds:
+        for a in add:
+            add_data = vars(add)
+            for single_data in add_data.items():
+                print('%s: %s' % single_data)
+            print('***************************************************')
+            print(a.headline)
+
+
+# test purpose
+if __name__ == "__main__":
+    main()
