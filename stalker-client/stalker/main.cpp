@@ -1,6 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "manager.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +13,11 @@ int main(int argc, char *argv[])
     Manager m;
 
     QQmlApplicationEngine engine;
+
+    QQmlContext *c = engine.rootContext();
+    c->setContextProperty("datamodel", m.dataModel);
+
+
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

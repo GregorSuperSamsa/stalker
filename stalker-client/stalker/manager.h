@@ -5,7 +5,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QList>
 #include <QTimer>
+#include "datamodel.h"
 
 
 class Manager : public QObject
@@ -13,6 +15,8 @@ class Manager : public QObject
     Q_OBJECT
 public:
     explicit Manager(QObject *parent = nullptr);
+
+    DataModel* dataModel;
 
 private:
     QNetworkAccessManager* networkManager;

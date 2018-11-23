@@ -1,22 +1,75 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 
-ApplicationWindow {
+ApplicationWindow
+{
+    id: root
     visible: true
     width: 640
     height: 480
     title: qsTr("Stalker")
 
-    ScrollView {
-        anchors.fill: parent
+    Rectangle
+    {
+        id: control
+        width: parent.width
+        height: parent.height / 4
+        color: "orange"
 
-        ListView {
-            width: parent.width
-            model: 20
-            delegate: ItemDelegate
+        MouseArea
+        {
+            anchors.fill: parent
+            onClicked:
             {
-                text: "Item " + (index + 1)
+                console.log("click")
+                listview.forceLayout()
+            }
+
+        }
+
+
+        ScrollView
+        {
+            id: scroll
+            anchors.top: control.bottom
+            ListView
+            {
+                id: listview
                 width: parent.width
+                model: datamodel
+                delegate: delegateItem
+
+                onModelChanged:
+                {
+                    console.log("Model changed")
+                }
+            }
+
+
+
+        }
+
+        Component
+        {
+            id: delegateItem
+            Rectangle
+            {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: "transparent"
+                Text
+                {
+                    id: url
+                    text: type
+                    color: "black"
+                }
+                Text
+                {
+                    id: title
+                    anchors.top: url.bottom
+                    text: size
+                    color: "black"
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 #include "manager.h"
 #include <QtDebug>
 #include <QJsonDocument>
+#include "datamodel.h"
 
 
 Manager::Manager(QObject *parent) : QObject(parent)
@@ -12,8 +13,9 @@ Manager::Manager(QObject *parent) : QObject(parent)
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     timer->setInterval(10000);
     timer->start();
-}
 
+    dataModel = new DataModel();
+}
 
 void Manager::onTimeout()
 {
@@ -21,12 +23,11 @@ void Manager::onTimeout()
     networkManager->get(request);
 }
 
-
 void Manager::onNetworkReply(QNetworkReply* reply)
 {
     QByteArray byteArray = reply->readAll();
 
-
+    dataModel->addAnimal(Animal("papa", "tata"));
     QString s = QString::fromUtf8(byteArray.constData());
     qDebug().noquote() << endl << endl << endl << s;
 
