@@ -6,31 +6,50 @@
 #include <QStringList>
 
 
-class Animal
+class StalkerData
 {
 public:
-    Animal(const QString &type, const QString &size);
+    StalkerData(const QString &headline, const QString &text, const QStringList &images, const QString &user,  const QString &contacts);
 
-    QString type() const;
-    QString size() const;
+    QString uniqueId() const;
+    QString dateTime() const;
+    QString headline() const;
+    QString text() const;
+    QStringList images() const;
+    QString price() const;
+    QString user() const;
+    QString contacts() const;
 
 private:
-    QString m_type;
-    QString m_size;
+    QString m_uniqueId;
+    QString m_dateTime;
+    QString m_headline;
+    QString m_text;
+    QStringList m_images;
+    QString m_user;
+    QString m_contacts;
+    QString m_price;
 };
 
-class DataModel : public QAbstractListModel
+class StalkerDataModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum AnimalRoles {
-        TypeRole = Qt::UserRole + 1,
-        SizeRole
+    enum DataRoles
+    {
+        UniqueIdRole = Qt::UserRole + 1,
+        DateTimeRole,
+        HeadlineRole,
+        TextRole,
+        ImagesRole,
+        PriceRole,
+        UserRole,
+        ContactsRole
     };
 
-    DataModel(QObject *parent = 0);
+    StalkerDataModel(QObject *parent = 0);
 
-    void addAnimal(const Animal &animal);
+    void addData(const StalkerData &data);
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
@@ -38,8 +57,10 @@ public:
 
 protected:
     QHash<int, QByteArray> roleNames() const;
+
 private:
-    QList<Animal> m_animals;
+    QList<StalkerData> m_dataItems;
+
 };
 
 #endif // DATAMODEL_H

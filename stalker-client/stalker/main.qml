@@ -8,69 +8,82 @@ ApplicationWindow
     width: 640
     height: 480
     title: qsTr("Stalker")
+    color: "lightgray"
 
-    Rectangle
+    Flickable
     {
-        id: control
-        width: parent.width
-        height: parent.height / 4
-        color: "orange"
-
-        MouseArea
+        anchors.fill: parent
+        ListView
         {
-            anchors.fill: parent
-            onClicked:
-            {
-                console.log("click")
-                listview.forceLayout()
-            }
-
+            rotation: 180
+            id: listview
+            width: parent.width
+            height: childrenRect.height
+            clip: true
+            model: stalkerDataModel
+            delegate: delegateItem
         }
+    }
 
-
-        ScrollView
+    Component
+    {
+        id: delegateItem
+        Rectangle
         {
-            id: scroll
-            anchors.top: control.bottom
-            ListView
+            rotation: 180
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: childrenRect.height
+            radius: 8
+            SwipeView
             {
-                id: listview
-                width: parent.width
-                model: datamodel
-                delegate: delegateItem
 
-                onModelChanged:
-                {
-                    console.log("Model changed")
-                }
-            }
-
-
-
-        }
-
-        Component
-        {
-            id: delegateItem
-            Rectangle
-            {
+                id: images
+                anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                color: "transparent"
-                Text
+                height: 200
+                Repeater
                 {
-                    id: url
-                    text: type
-                    color: "black"
+                    model: data_images
+                    Image
+                    {
+                        asynchronous: true
+                        source: data_images[index]
+                        fillMode: Image.PreserveAspectFit
+                    }
                 }
-                Text
-                {
-                    id: title
-                    anchors.top: url.bottom
-                    text: size
-                    color: "black"
-                }
+            }
+            Text
+            {
+                id: headline
+                anchors.top: images.bottom
+                text: data_headline
+                color: "black"
+            }
+            Text
+            {
+                id: text
+                anchors.top: headline.bottom
+                text: data_text
+                color: "black"
+            }
+            Text
+            {
+                id: user
+                anchors.top: text.bottom
+                text: data_user
+                color: "black"
+            }
+
+            Text
+            {
+                id: contacts
+                anchors.top: user.bottom
+                text: data_contacts
+                color: "black"
             }
         }
     }
 }
+

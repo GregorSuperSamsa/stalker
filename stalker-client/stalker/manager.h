@@ -16,7 +16,7 @@ class Manager : public QObject
 public:
     explicit Manager(QObject *parent = nullptr);
 
-    DataModel* dataModel;
+    StalkerDataModel* stalkerModel;
 
 private:
     QNetworkAccessManager* networkManager;

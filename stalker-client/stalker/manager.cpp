@@ -14,7 +14,13 @@ Manager::Manager(QObject *parent) : QObject(parent)
     timer->setInterval(10000);
     timer->start();
 
-    dataModel = new DataModel();
+    QStringList s;
+    s << "https://upload.wikimedia.org/wikipedia/en/e/e0/WPVG_icon_2016.svg";
+    s << "http://simpleicon.com/wp-content/uploads/rocket.png";
+    stalkerModel = new StalkerDataModel();
+    stalkerModel->addData(
+                StalkerData("u_headline", "u_text", s, "u_user", "u_contacts"));
+
 }
 
 void Manager::onTimeout()
@@ -27,7 +33,9 @@ void Manager::onNetworkReply(QNetworkReply* reply)
 {
     QByteArray byteArray = reply->readAll();
 
-    dataModel->addAnimal(Animal("papa", "tata"));
+
+
+
     QString s = QString::fromUtf8(byteArray.constData());
     qDebug().noquote() << endl << endl << endl << s;
 

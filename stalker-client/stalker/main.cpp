@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext *c = engine.rootContext();
-    c->setContextProperty("datamodel", m.dataModel);
+    c->setContextProperty("stalkerDataModel", m.stalkerModel);
 
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

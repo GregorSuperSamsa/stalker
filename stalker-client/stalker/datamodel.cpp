@@ -1,52 +1,127 @@
 #include "datamodel.h"
 
-Animal::Animal(const QString &type, const QString &size)
-    : m_type(type), m_size(size)
+
+StalkerData::StalkerData(const QString &headline
+           , const QString &text
+           , const QStringList &images
+           , const QString &user
+           , const QString &contacts)
+    : m_headline(headline)
+    , m_text(text)
+    , m_images(images)
+    , m_user(user)
+    , m_contacts(contacts) {}
+
+
+
+QString StalkerData::headline() const
 {
+    return m_headline;
 }
 
-QString Animal::type() const
+QString StalkerData::text() const
 {
-    return m_type;
+    return m_text;
 }
 
-QString Animal::size() const
+QStringList StalkerData::images() const
 {
-    return m_size;
+    return m_images;
 }
 
-DataModel::DataModel(QObject *parent)
-    : QAbstractListModel(parent)
+QString StalkerData::user() const
 {
+    return  m_user;
 }
 
-void DataModel::addAnimal(const Animal &animal)
+QString StalkerData::contacts() const
+{
+    return m_contacts;
+}
+
+QString StalkerData::uniqueId() const
+{
+    return m_uniqueId;
+}
+
+QString StalkerData::dateTime() const
+{
+    return m_dateTime;
+}
+
+QString StalkerData::price() const
+{
+    return m_price;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+StalkerDataModel::StalkerDataModel(QObject *parent): QAbstractListModel(parent) {}
+
+void StalkerDataModel::addData(const StalkerData &data)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_animals << animal;
+    m_dataItems << data;
     endInsertRows();
 }
 
-int DataModel::rowCount(const QModelIndex & parent) const {
+int StalkerDataModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
-    return m_animals.count();
+    return m_dataItems.count();
 }
 
-QVariant DataModel::data(const QModelIndex & index, int role) const {
-    if (index.row() < 0 || index.row() >= m_animals.count())
+QVariant StalkerDataModel::data(const QModelIndex & index, int role) const
+{
+    if (index.row() < 0 || index.row() >= m_dataItems.count())
+    {
         return QVariant();
+    }
 
-    const Animal &animal = m_animals[index.row()];
-    if (role == TypeRole)
-        return animal.type();
-    else if (role == SizeRole)
-        return animal.size();
-    return QVariant();
+    const StalkerData &data = m_dataItems[index.row()];
+    switch (role)
+    {
+    case UniqueIdRole:
+        return data.uniqueId();
+        break;
+    case DateTimeRole:
+        return data.dateTime();
+        break;
+    case HeadlineRole:
+        return data.headline();
+        break;
+    case TextRole:
+        return data.text();
+        break;
+     case ImagesRole:
+        return  data.images();
+        break;
+    case PriceRole:
+        return data.price();
+        break;
+    case UserRole:
+        return data.user();
+        break;
+    case ContactsRole:
+        return data.contacts();
+        break;
+    default:
+        return QVariant();
+        break;
+    }
 }
 
-QHash<int, QByteArray> DataModel::roleNames() const {
+QHash<int, QByteArray> StalkerDataModel::roleNames() const
+{
     QHash<int, QByteArray> roles;
-    roles[TypeRole] = "type";
-    roles[SizeRole] = "size";
+
+    roles[UniqueIdRole] = "data_uniqueId";
+    roles[DateTimeRole] = "date_dateTime";
+    roles[HeadlineRole] = "data_headline";
+    roles[TextRole]     = "data_text";
+    roles[ImagesRole]   = "data_images";
+    roles[PriceRole]    = "data_price";
+    roles[UserRole]     = "data_user";
+    roles[ContactsRole] = "data_contacts";
+
     return roles;
 }
