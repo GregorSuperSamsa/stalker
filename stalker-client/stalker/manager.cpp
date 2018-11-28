@@ -1,6 +1,8 @@
 #include "manager.h"
 #include <QtDebug>
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "datamodel.h"
 
 
@@ -14,18 +16,12 @@ Manager::Manager(QObject *parent) : QObject(parent)
     timer->setInterval(10000);
     timer->start();
 
-    QStringList s;
-    s << "https://upload.wikimedia.org/wikipedia/en/e/e0/WPVG_icon_2016.svg";
-    s << "http://simpleicon.com/wp-content/uploads/rocket.png";
     stalkerModel = new StalkerDataModel();
-    stalkerModel->addData(
-                StalkerData("u_headline", "u_text", s, "u_user", "u_contacts"));
-
 }
 
 void Manager::onTimeout()
 {
-    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=bmw&query=awo"));
+    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=pedal"));
     networkManager->get(request);
 }
 
@@ -33,14 +29,30 @@ void Manager::onNetworkReply(QNetworkReply* reply)
 {
     QByteArray byteArray = reply->readAll();
 
-
-
-
     QString s = QString::fromUtf8(byteArray.constData());
     qDebug().noquote() << endl << endl << endl << s;
 
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(s.toUtf8());
-    qDebug()<<jsonDoc.toJson();
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(byteArray);
+    QJsonArray jsonArray = jsonResponse.array();
+
+    stalkerModel->removeRows(0, stalkerModel->rowCount());
+
+    foreach (const QJsonValue & value, jsonArray)
+    {
+        QJsonObject obj = value.toObject();
+        StalkerData sd;// = new StalkerData();
+
+        sd.setHeadline(obj["headline"].toString());
+        sd.setContacts(obj["phone"].toString());
+        sd.setDateTime(obj["date"].toString());
+        sd.setImages(QStringList(obj["images"].toString()));
+        sd.setImages(QStringList(obj["thumbnail"].toString()));
+        sd.setPrice(obj["price"].toString());
+        sd.setText(obj["text"].toString());
+        sd.setUser(obj["user"].toString());
+
+        stalkerModel->addData(sd);
+    }
 
     reply->deleteLater();
 }

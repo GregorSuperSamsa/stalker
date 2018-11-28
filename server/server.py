@@ -44,12 +44,17 @@ def _olx():
     print(queries)
     scrapper = olx.OlxScraper()
     addss = scrapper.multiscrap(queries)
-    jason = ''
+    jason = ""
+    r = []
     for adds in addss:
         for add in adds:
-            jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
+            r.append(add.__dict__)
+            #r.append(json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4))
+            #jason += json.dumps(add, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
 
-    return jason
+
+    pp =  json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__, indent=4)
+    return pp
 #
 #
 # @app.route('/bazar')

@@ -1,22 +1,21 @@
 #include "datamodel.h"
 
 
-StalkerData::StalkerData(const QString &headline
-           , const QString &text
-           , const QStringList &images
-           , const QString &user
-           , const QString &contacts)
-    : m_headline(headline)
-    , m_text(text)
-    , m_images(images)
-    , m_user(user)
-    , m_contacts(contacts) {}
+StalkerData::StalkerData() {}
 
-
+void StalkerData::setHeadline(const QString &headline)
+{
+    m_headline = headline;
+}
 
 QString StalkerData::headline() const
 {
     return m_headline;
+}
+
+void StalkerData::setText(const QString &text)
+{
+    m_text = text;
 }
 
 QString StalkerData::text() const
@@ -24,9 +23,19 @@ QString StalkerData::text() const
     return m_text;
 }
 
+void StalkerData::setImages(const QStringList &images)
+{
+    m_images = images;
+}
+
 QStringList StalkerData::images() const
 {
     return m_images;
+}
+
+void StalkerData::setUser(const QString &user)
+{
+    m_user = user;
 }
 
 QString StalkerData::user() const
@@ -34,9 +43,19 @@ QString StalkerData::user() const
     return  m_user;
 }
 
+void StalkerData::setContacts(const QString &contacts)
+{
+    m_contacts = contacts;
+}
+
 QString StalkerData::contacts() const
 {
     return m_contacts;
+}
+
+void StalkerData::setUniqueId(const QString &uniqueId)
+{
+    m_uniqueId = uniqueId;
 }
 
 QString StalkerData::uniqueId() const
@@ -44,9 +63,19 @@ QString StalkerData::uniqueId() const
     return m_uniqueId;
 }
 
+void StalkerData::setDateTime(const QString &dateTime)
+{
+    m_dateTime = dateTime;
+}
+
 QString StalkerData::dateTime() const
 {
     return m_dateTime;
+}
+
+void StalkerData::setPrice(const QString &price)
+{
+    m_price = price;
 }
 
 QString StalkerData::price() const
@@ -54,7 +83,7 @@ QString StalkerData::price() const
     return m_price;
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 StalkerDataModel::StalkerDataModel(QObject *parent): QAbstractListModel(parent) {}
 
@@ -65,12 +94,103 @@ void StalkerDataModel::addData(const StalkerData &data)
     endInsertRows();
 }
 
-int StalkerDataModel::rowCount(const QModelIndex & parent) const {
+int StalkerDataModel::rowCount(const QModelIndex & parent) const
+{
     Q_UNUSED(parent);
     return m_dataItems.count();
 }
 
-QVariant StalkerDataModel::data(const QModelIndex & index, int role) const
+StalkerData* StalkerDataModel::getItem(const QModelIndex &index)
+{
+    if (index.row() < 0 || index.row() >= m_dataItems.count())
+    {
+        return nullptr;
+    }
+
+    return &m_dataItems[index.row()];
+}
+
+bool StalkerDataModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool result = false;
+
+    if (!(index.row() < 0 || index.row() >= m_dataItems.count()))
+    {
+        StalkerData &data = m_dataItems[index.row()];
+        switch (role)
+        {
+        case UniqueIdRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setUniqueId(value.toString());
+                result = true;
+            }
+            return true;
+            break;
+        case DateTimeRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setDateTime(value.toString());
+                result = true;
+            }
+            break;
+        case HeadlineRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setHeadline(value.toString());
+                result = true;
+            }
+            break;
+        case TextRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setText(value.toString());
+                result = true;
+            }
+            break;
+        case ImagesRole:
+            if (0 != value.toStringList().count())
+            {
+                data.setImages(value.toStringList());
+                result = true;
+            }
+            break;
+        case PriceRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setPrice(value.toString());
+                result = true;
+            }
+            break;
+        case UserRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setUser(value.toString());
+                result = true;
+            }
+            break;
+        case ContactsRole:
+            if (!value.toString().isEmpty())
+            {
+                data.setContacts(value.toString());
+                result = true;
+            }
+            break;
+        default:
+            result = false;
+            break;
+        }
+    }
+
+    if (result)
+    {
+        emit dataChanged(index, index);
+    }
+
+    return result;
+}
+
+QVariant StalkerDataModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_dataItems.count())
     {
@@ -92,7 +212,7 @@ QVariant StalkerDataModel::data(const QModelIndex & index, int role) const
     case TextRole:
         return data.text();
         break;
-     case ImagesRole:
+    case ImagesRole:
         return  data.images();
         break;
     case PriceRole:

@@ -83,6 +83,13 @@ ApplicationWindow
                 text: data_contacts
                 color: "black"
             }
+            Text
+            {
+                id: price
+                anchors.top: user.bottom
+                text: data_price
+                color: "black"
+            }
         }
     }
 }

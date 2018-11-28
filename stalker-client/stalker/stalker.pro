@@ -16,7 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     manager.cpp \
-    datamodel.cpp
+    datamodel.cpp \
+    olxdata.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     manager.h \
-    datamodel.h
+    datamodel.h \
+    olxdata.h
