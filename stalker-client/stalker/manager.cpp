@@ -13,7 +13,7 @@ Manager::Manager(QObject *parent) : QObject(parent)
 
     timer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    timer->setInterval(10000);
+    timer->setInterval(1000);
     timer->start();
 
     stalkerModel = new StalkerDataModel();
@@ -21,7 +21,7 @@ Manager::Manager(QObject *parent) : QObject(parent)
 
 void Manager::onTimeout()
 {
-    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=pedal"));
+    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=awo"));
     networkManager->get(request);
 }
 
@@ -40,7 +40,7 @@ void Manager::onNetworkReply(QNetworkReply* reply)
     foreach (const QJsonValue & value, jsonArray)
     {
         QJsonObject obj = value.toObject();
-        StalkerData sd;// = new StalkerData();
+        StalkerData sd;
 
         sd.setHeadline(obj["headline"].toString());
         sd.setContacts(obj["phone"].toString());
