@@ -21,9 +21,50 @@ class OlxAdd(object):
 
 
 class OlxScraper(object):
+    search_result_urls = []
+    _query = 'pedal'
+
+    @property
+    def query(self):
+        return self._query
+
+    @query.setter
+    def query(self, query):
+        self._query = query
+
     def __init__(self):
         self.url = ''
-        self.query = ''
+        #self.query = ''
+
+    @classmethod
+    def fetch_page_result_urls(self):
+
+        print('self.query = ' + self._query)
+
+        self.search_result_urls.append('https://www.olx.bg/ads/q-' + self._query + '/?search%5Bdescription%5D=1')
+
+        page = ''
+        while '' == page:
+            try:
+                page = requests.get(self.search_result_urls[0])
+            except:
+                print("Connection refused by the server..")
+                time.sleep(4)
+                continue
+
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        # get all pages per searched query
+        pager_element = soup.find('div', {'class': 'pager rel clr'})
+        if pager_element:
+            result_pages = pager_element.find_all('span', {'class': 'item fleft'})
+            if result_pages:
+                for result_page in result_pages:
+                    url = result_page.find('a', href=True)
+                    if url:
+                        self.search_result_urls.append(url['href'])
+
+        return self.search_result_urls
 
     @classmethod
     def scrap(self, query):
@@ -38,6 +79,15 @@ class OlxScraper(object):
                 continue
 
         soup = BeautifulSoup(page.content, 'html.parser')
+
+        # get all pages per searched query
+        pager_element = soup.find('div', {'class': 'pager rel clr'})
+        if pager_element:
+            result_pages = pager_element.find_all('span', {'class': 'item fleft'})
+            if result_pages:
+                for result_page in result_pages:
+                    url = result_page.find('a')['href']
+                    print(url)
 
         array = soup.find_all('td', {'class': 'offer'})
         for html in array:
@@ -105,16 +155,13 @@ class OlxScraper(object):
 
 def main():
     scrapper = OlxScraper()
-    adds = scrapper.scrap('recaro')
-    print('')
-    print('***************************************************')
-    for add in adds:
-        for a in add:
-            add_data = vars(add)
-            for single_data in add_data.items():
-                print('%s: %s' % single_data)
-            print('***************************************************')
-            print(a.headline)
+    scrapper.query(self, "bmw")
+
+    print('Scrapper.query = ' + scrapper.query)
+
+    r = scrapper.fetch_page_result_urls()
+    for url in r:
+        print('Page url:' + url)
 
 
 # test purpose
