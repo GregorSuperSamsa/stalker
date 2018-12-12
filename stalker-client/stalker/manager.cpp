@@ -21,7 +21,7 @@ Manager::Manager(QObject *parent) : QObject(parent)
 
 void Manager::onTimeout()
 {
-    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=awo"));
+    QNetworkRequest request(QUrl("http://127.0.0.1:5000/olx?query=стоп за аво"));
     networkManager->get(request);
 }
 

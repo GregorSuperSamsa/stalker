@@ -130,13 +130,16 @@ ApplicationWindow
     {
         visible: true
         iconSource: "qrc:/images/icon.jpg"
-        //Component.onCompleted: showMessage("Message title", "Something important came up. Click this to know more.")
+        Component.onCompleted: showMessage("Message title", "Something important came up. Click this to know more.")
         menu: Menu
         {
             MenuItem
             {
                 text: qsTr("Quit")
-                onTriggered: Qt.quit()
+                onTriggered: {
+                    notification.show()
+                    //Qt.quit()
+                }
             }
         }
 
@@ -147,5 +150,11 @@ ApplicationWindow
             window.requestActivate()
         }
     }
+
+    Notify
+    {
+        id: notification
+    }
+
 }
 
